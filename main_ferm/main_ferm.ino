@@ -44,7 +44,7 @@ sensor1.requestTemperatures();
 float temp1=sensor1.getTempCByIndex(0); 
 
 sensor2.requestTemperatures();
-float temp1=sensor2.getTempCByIndex(0);
+float temp2=sensor2.getTempCByIndex(0);
 
 Serial.print("Lectura Sensor 1:  ");
 Serial.println(temp1); 
