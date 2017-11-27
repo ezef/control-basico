@@ -22,15 +22,19 @@ int tempSet1;
 int tempSet2;
 int seguridad1;
 int seguridad2;
+int intentos1;
+int intentos2;
 int parametroseguro;
 
 void setup() {  
 tempSet1=16;
 tempSet2=16;
-seguridad1=0;
-seguridad2 = 0;
+seguridad1=1;
+seguridad2 = 1;
+intentos1=0;
+intentos2=0;
 
-parametroseguro= 2; 
+parametroseguro= 5; 
 
 Serial.begin(9600); 
 
@@ -67,42 +71,48 @@ void loop() {
 		if(temp1 > tempSet1+HISTERESIS){
 		  digitalWrite(RELAY1,LOW);
 		  Serial.print("Ferm1 ON  ");
-		  Serial.print(temp1);
-		  seguridad1 = seguridad1 + 1;
+		  Serial.print(temp1);		  
+                  intentos1= intentos1 + 1;
+                  seguridad1 = seguridad1*intentos1;
 		}
 		else{
 			if ( temp1<tempSet1-HISTERESIS){ 
 			  digitalWrite(RELAY1,HIGH); 
 			  Serial.print("Ferm1 OFF  ");
-			  Serial.print(temp1);		  
+			  Serial.print(temp1);
+                          seguridad1=1;
+                          intentos1=0;  
 			  }
 		}
 	}else{
 	digitalWrite(RELAY1,HIGH); 
 	Serial.print("Ferm1 Parada de Emergencia:  ");
 	Serial.print(temp1);		
-	seguridad1 = 0;
-	}	
+	seguridad1 = seguridad1 - 1;
+        }
 	
 	if ( seguridad2 < parametroseguro){
 		if(temp2 > tempSet2+HISTERESIS){
 		  digitalWrite(RELAY2,LOW);
 		  Serial.print(" Ferm2 ON: ");
 		  Serial.println(temp2);
-                  seguridad2 = seguridad2 + 1;
+                  intentos2= intentos2 + 1;
+                  seguridad2 = seguridad2*intentos2;
 		}
 		else{
 			if ( temp2<tempSet2-HISTERESIS){ 
 			  digitalWrite(RELAY2,HIGH); 
 			  Serial.print(" Ferm2 OFF: ");
 			  Serial.println(temp2);
+                          seguridad2=1;
+                          intentos2=0;
 			  }
 		}
 	}else{
 	digitalWrite(RELAY2,HIGH); 
 	Serial.print(" Ferm2 Parada de Emergencia:  ");
 	Serial.println(temp2);		
-	seguridad2 = 0;
+	seguridad2 = seguridad2 -1;
 	}	
   }
 }
