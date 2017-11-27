@@ -30,7 +30,7 @@ tempSet2=16;
 seguridad1=0;
 seguridad2 = 0;
 
-parametroseguro= 4; 
+parametroseguro= 2; 
 
 Serial.begin(9600); 
 
@@ -89,6 +89,7 @@ void loop() {
 		  digitalWrite(RELAY2,LOW);
 		  Serial.print(" Ferm2 ON: ");
 		  Serial.println(temp2);
+                  seguridad2 = seguridad2 + 1;
 		}
 		else{
 			if ( temp2<tempSet2-HISTERESIS){ 
@@ -99,8 +100,8 @@ void loop() {
 		}
 	}else{
 	digitalWrite(RELAY2,HIGH); 
-	Serial.print("Ferm2 Parada de Emergencia:  ");
-	Serial.print(temp2);		
+	Serial.print(" Ferm2 Parada de Emergencia:  ");
+	Serial.println(temp2);		
 	seguridad2 = 0;
 	}	
   }
