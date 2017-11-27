@@ -1,48 +1,84 @@
-
-
 #include <tempo.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
 #define RELAY1 2
+#define RELAY2 3
+
 #define HISTERESIS 0.3
-#define BUSONEWIRE 9
+#define BUSONEWIRE1 9
+#define BUSONEWIRE2 10
 
 Tempo t_temp(30*1000); // temporizador para la lectura de temperatura
 
-OneWire oneWire(BUSONEWIRE);
-DallasTemperature sensors(&oneWire);
+OneWire oneWire1(BUSONEWIRE1);
+DallasTemperature sensor1(&oneWire1);
+
+OneWire oneWire2(BUSONEWIRE2);
+DallasTemperature sensor2(&oneWire2);
+
+
 int tempSet;
 
 void setup() {  
-  tempSet=16;
-  Serial.begin(9600); 
-  pinMode(RELAY1,OUTPUT);
+tempSet1=16;
+tempSet2=16;
+Serial.begin(9600); 
+
+pinMode(RELAY1,OUTPUT);
 digitalWrite(RELAY1,HIGH);
-sensors.requestTemperatures();
-float temp1=sensors.getTempCByIndex(0); 
-Serial.print("OFF  ");
+
+pinMode(RELAY2,OUTPUT);
+digitalWrite(RELAY2,HIGH);
+
+sensor1.requestTemperatures();
+float temp1=sensor1.getTempCByIndex(0); 
+
+sensor2.requestTemperatures();
+float temp1=sensor2.getTempCByIndex(0);
+
+Serial.print("Lectura Sensor 1:  ");
 Serial.println(temp1); 
+
+Serial.print("Lectura Sensor 2:  ");
+Serial.println(temp2); 
 
 }
 
 void loop() {
 
   if (t_temp.state()){
-        sensors.requestTemperatures();
-        float temp1=sensors.getTempCByIndex(0);
-        
-        if(temp1 > tempSet+HISTERESIS){
-          digitalWrite(RELAY1,LOW);
-          Serial.print("ON  ");
-          Serial.println(temp1);
-      }
-      else{
-        if ( temp1<tempSet-HISTERESIS){ 
-          digitalWrite(RELAY1,HIGH); 
-          Serial.print("OFF  ");
-          Serial.println(temp1);
-          }
-      }        
+	sensor1.requestTemperatures();
+	float temp1=sensor1.getTempCByIndex(0);
+	
+	sensor2.requestTemperatures();
+	float temp2=sensor2.getTempCByIndex(0);
+	
+	if(temp1 > tempSet1+HISTERESIS){
+	  digitalWrite(RELAY1,LOW);
+	  Serial.print("Ferm1 ON  ");
+	  Serial.print(temp1);
+	}
+	else{
+		if ( temp1<tempSet1-HISTERESIS){ 
+		  digitalWrite(RELAY1,HIGH); 
+		  Serial.print("Ferm1 OFF  ");
+		  Serial.print(temp1);
+		  }
+	}
+
+	if(temp2 > tempSet2+HISTERESIS){
+	  digitalWrite(RELAY2,LOW);
+	  Serial.print(" Ferm2 ON: ");
+	  Serial.println(temp2);
+	}
+	else{
+		if ( temp2<tempSet2-HISTERESIS){ 
+		  digitalWrite(RELAY2,HIGH); 
+		  Serial.print(" Ferm2 OFF: ");
+		  Serial.println(temp2);
+		  }
+	} 
+	
   }
 }
